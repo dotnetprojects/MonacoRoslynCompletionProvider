@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>DotNetProjects.$(AssemblyName)</PackageId>
+    <Version>1.0.0</Version>
+    <PackageProjectUrl>https://github.com/node-projects/MonacoRoslynCompletionProvider</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.0.0-6.final" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.0.0-6.final" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.0.0-6.final" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.0.0-6.final" />
+  </ItemGroup>
+  
+</Project>
