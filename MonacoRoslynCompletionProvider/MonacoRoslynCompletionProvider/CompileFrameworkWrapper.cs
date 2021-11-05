@@ -15,6 +15,7 @@ namespace MonacoRoslynCompletionProvider
 {
     public class CompletionProvider
     {
+        // Thanks to https://www.strathweb.com/2018/12/using-roslyn-c-completion-service-programmatically/
         public async static Task<TabCompletionDTO[]> GetCodeCompletionForCode(string code, int position, params string[] assemblies)
         {
             Assembly[] lst = new[] {
