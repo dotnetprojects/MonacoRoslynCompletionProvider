@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore MonacoRoslynCompletionProvider
       
     - name: GitVersion
       id: gitversion  # step id used as reference for output values
@@ -33,4 +33,4 @@ jobs:
         informationalVersion: ${{ steps.gitversion.outputs.InformationalVersion }}
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore MonacoRoslynCompletionProvider
