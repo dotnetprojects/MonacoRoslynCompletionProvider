@@ -24,14 +24,21 @@ namespace MonacoRoslynCompletionProvider
             {
                 SyntaxNode childNode = expressionNode.ChildNodes()?.FirstOrDefault()?.ChildNodes()?.FirstOrDefault();
                 typeInfo = semanticModel.GetTypeInfo(childNode);
+                var location = expressionNode.GetLocation();
+                return new HoverInfoResult() { Information = typeInfo.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
-            else if (expressionNode is ClassDeclarationSyntax)
+            else if (expressionNode is ParameterSyntax p)
             {
-                throw new NotImplementedException();
+                var location = expressionNode.GetLocation();
+                return new HoverInfoResult() { Information = p.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
-            else if (expressionNode is IdentifierNameSyntax)
+            //else if (expressionNode is ClassDeclarationSyntax)
+            //{
+            //    throw new NotImplementedException();
+            //}
+            else
             {
-               
+
                 var symbolInfo = semanticModel.GetSymbolInfo(expressionNode);
                 if (symbolInfo.Symbol != null)
                 {
@@ -40,15 +47,6 @@ namespace MonacoRoslynCompletionProvider
                 }
                     return null;
                 return null;
-            }
-            else
-            {
-                typeInfo = semanticModel.GetTypeInfo(expressionNode);
-                if (typeInfo.Type == null)
-                {
-                    expressionNode = expressionNode.Parent;
-                    typeInfo = semanticModel.GetTypeInfo(expressionNode);
-                }
             }
 
             return null;
