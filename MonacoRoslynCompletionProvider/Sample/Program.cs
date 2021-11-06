@@ -25,6 +25,13 @@ app.MapPost("/completion/{0}", async (e) =>
             await JsonSerializer.SerializeAsync(e.Response.Body, hoverInfoResult);
             return;
         }
+        else if (e.Request.Path.Value?.EndsWith("codeCheck") == true)
+        {
+            var codeCheckRequest = JsonSerializer.Deserialize<CodeCheckRequest>(text);
+            var codeCheckResults = await CompletitionRequestHandler.Handle(codeCheckRequest);
+            await JsonSerializer.SerializeAsync(e.Response.Body, codeCheckResults);
+            return;
+        }
     } 
     
     e.Response.StatusCode = 405;

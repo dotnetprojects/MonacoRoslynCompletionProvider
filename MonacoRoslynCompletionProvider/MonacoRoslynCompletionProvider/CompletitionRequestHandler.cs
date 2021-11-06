@@ -18,5 +18,12 @@ namespace MonacoRoslynCompletionProvider
             var document = await workspace.CreateDocument(hoverInfoRequest.Code);
             return await document.GetHoverInformation(hoverInfoRequest.Position);
         }
+
+        public async static Task<CodeCheckResult[]> Handle(CodeCheckRequest codeCheckRequest)
+        {
+            var workspace = CompletionWorkspace.Create(codeCheckRequest.Assemblies);
+            var document = await workspace.CreateDocument(codeCheckRequest.Code);
+            return await document.GetCodeCheckResults();
+        }
     }
 }

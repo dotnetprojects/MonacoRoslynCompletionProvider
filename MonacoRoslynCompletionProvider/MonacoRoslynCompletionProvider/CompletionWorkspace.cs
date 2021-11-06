@@ -67,8 +67,8 @@ namespace MonacoRoslynCompletionProvider
             return new CompletionWorkspace() { _workspace = workspace, _project = project, _metadataReferences = references };
         }
 
-        public async Task<CompletionDocument> CreateDocument(string code) {
-
+        public async Task<CompletionDocument> CreateDocument(string code)
+        {
             var document = _workspace.AddDocument(_project.Id, "MyFile2.cs", SourceText.From(code));
             var st = await document.GetSyntaxTreeAsync();
             var compilation =
@@ -79,11 +79,11 @@ namespace MonacoRoslynCompletionProvider
                     references: _metadataReferences
                 );
 
-            compilation.Emit("temp");
+            var result = compilation.Emit("temp");
             var semanticModel = compilation.GetSemanticModel(st, true);
 
             
-            return new CompletionDocument(document, semanticModel); 
+            return new CompletionDocument(document, semanticModel, result); 
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿function registerCsharpProvider() {
 
+    var assemblies = null;
+
     monaco.languages.registerCompletionItemProvider('csharp', {
         triggerCharacters: [".", "("],
         provideCompletionItems: async (model, position) => {
@@ -9,7 +11,7 @@
             let request = {
                 Code: model.getValue(),
                 Position: textUntilPosition.length,
-                Assemblies: null
+                Assemblies: assemblies
             }
 
             let resultQ = await axios.post("/completion/complete", JSON.stringify(request))
@@ -33,7 +35,7 @@
             let request = {
                 Code: model.getValue(),
                 Position: model.getOffsetAt(position),
-                Assemblies: null
+                Assemblies: assemblies
             }
 
             let resultQ = await axios.post("/completion/hover", JSON.stringify(request))
@@ -48,6 +50,44 @@
                 ]
             };
         }
+    });
+
+    monaco.editor.onDidCreateModel(function (model) {
+        async function validate() {
+
+            let request = {
+                Code: model.getValue(),
+                Assemblies: assemblies
+            }
+
+            let resultQ = await axios.post("/completion/codeCheck", JSON.stringify(request))
+
+            let markers = [];
+
+            for (let elem of resultQ.data) {
+                posStart = model.getPositionAt(elem.OffsetFrom);
+                posEnd = model.getPositionAt(elem.OffsetTo);
+
+                markers.push({
+                    severity: monaco.MarkerSeverity.Error,
+                    startLineNumber: posStart.lineNumber,
+                    startColumn: posStart.column,
+                    endLineNumber: posEnd.lineNumber,
+                    endColumn: posEnd.column,
+                    message: elem.Message
+                });
+            }
+
+            monaco.editor.setModelMarkers(model, 'csharp', markers);
+        }
+
+        var handle = null;
+        model.onDidChangeContent(() => {
+            monaco.editor.setModelMarkers(model, 'csharp', []);
+            clearTimeout(handle);
+            handle = setTimeout(() => validate(), 500);
+        });
+        validate();
     });
 
 }
