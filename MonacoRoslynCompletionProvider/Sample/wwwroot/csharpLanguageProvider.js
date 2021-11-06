@@ -69,7 +69,7 @@
                 posEnd = model.getPositionAt(elem.OffsetTo);
 
                 markers.push({
-                    severity: monaco.MarkerSeverity.Error,
+                    severity: elem.Severity,
                     startLineNumber: posStart.lineNumber,
                     startColumn: posStart.column,
                     endLineNumber: posEnd.lineNumber,
