@@ -1,0 +1,29 @@
+﻿<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monaco Roslyn C# Code Completion Sample</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+	<h2>Monaco Editor Sample</h2>
+	<div id="container" style="width: 800px; height: 600px; border: 1px solid grey"></div>
+
+	<script src="csharpLanguageProvider.js"></script>
+	<script src="node_modules/monaco-editor/min/vs/loader.js"></script>
+	<script>
+		require.config({ paths: { vs: 'node_modules/monaco-editor/min/vs' } });
+
+		require(['vs/editor/editor.main'], function () {
+
+			registerCsharpProvider();
+
+			var editor = monaco.editor.create(document.getElementById('container'), {
+				value: "using System;\n\npublic class MyClass\n{\n\tpublic static void MyMethod(int value)\n\t{\n\t\tGuid.\n\t}\n}",
+				language: 'csharp'
+			});
+		});
+	</script>
+</body>
+</html>

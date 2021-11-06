@@ -1,7 +1,10 @@
-﻿namespace Sample
+﻿namespace MonacoRoslynCompletionProvider.Api
 {
     public class TabCompletionRequest
     {
+        public TabCompletionRequest()
+        { }
+
         public TabCompletionRequest(string code, int position, string[] assemblies) 
         {
             this.Code = code;

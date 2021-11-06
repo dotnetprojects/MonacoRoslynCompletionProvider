@@ -1,8 +1,8 @@
-﻿namespace MonacoRoslynCompletionProvider
+﻿namespace MonacoRoslynCompletionProvider.Api
 {
-    public class TabCompletionDTO
+    public class TabCompletionResult
     {
-        public TabCompletionDTO() { }
+        public TabCompletionResult() { }
 
         public virtual string Suggestion { get; set; }
 
