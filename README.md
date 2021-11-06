@@ -2,8 +2,16 @@
 Provides C# Code Completion for a Monaco Editor Component
 
 # How to run:
+	- cd Sample\HTML
+	- npm i
+	- cd..
+	- dotnet run
+	- open webpage in browser (normaly http://localhost:5280/index.html) but it is displayed in the console
 
-- cd Sample\HTML
-- npm i
-- cd..
-- dotnet run
+# ToDo's :
+	- Show Method Declarations
+	- Better Tooltips for Hover
+	- Completition after (, when entering a new keyword, ...
+	- More suggestions were possible
+	- Perfomance, at The Moment Everything is created for one Info and Destroyed after.
+	  It's developed in some way so parts could be reused, but it should be better
