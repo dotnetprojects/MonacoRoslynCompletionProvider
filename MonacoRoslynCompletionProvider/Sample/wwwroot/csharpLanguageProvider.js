@@ -5,12 +5,11 @@
     monaco.languages.registerCompletionItemProvider('csharp', {
         triggerCharacters: [".", "("],
         provideCompletionItems: async (model, position) => {
-            let textUntilPosition = model.getValueInRange({ startLineNumber: 1, startColumn: 1, endLineNumber: position.lineNumber, endColumn: position.column });
             let suggestions = [];
 
             let request = {
                 Code: model.getValue(),
-                Position: textUntilPosition.length,
+                Position: model.getOffsetAt(position),
                 Assemblies: assemblies
             }
 
