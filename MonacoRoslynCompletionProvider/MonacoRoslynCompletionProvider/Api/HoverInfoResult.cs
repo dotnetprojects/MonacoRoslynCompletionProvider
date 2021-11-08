@@ -1,6 +1,6 @@
 ﻿namespace MonacoRoslynCompletionProvider.Api
 {
-    public class HoverInfoResult
+    public class HoverInfoResult : IResponse
     {
         public HoverInfoResult() { }
 

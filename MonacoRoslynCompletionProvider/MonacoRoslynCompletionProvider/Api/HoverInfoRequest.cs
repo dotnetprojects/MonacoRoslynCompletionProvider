@@ -1,6 +1,6 @@
 ﻿namespace MonacoRoslynCompletionProvider.Api
 {
-    public class HoverInfoRequest
+    public class HoverInfoRequest : IRequest
     {
         public HoverInfoRequest()
         { }

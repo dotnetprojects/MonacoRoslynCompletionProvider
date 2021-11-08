@@ -2,7 +2,7 @@
 
 namespace MonacoRoslynCompletionProvider.Api
 {
-    public class CodeCheckResult
+    public class CodeCheckResult : IResponse
     {
         public CodeCheckResult() { }
 
