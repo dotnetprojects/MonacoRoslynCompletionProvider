@@ -15,3 +15,6 @@ Provides C# Code Completion for a Monaco Editor Component
 	- More suggestions were possible
 	- Perfomance, at The Moment Everything is created for one Info and Destroyed after.
 	  It's developed in some way so parts could be reused, but it should be better
+
+# Sample
+![image](https://user-images.githubusercontent.com/364896/140825032-1b7fecae-b3ba-434c-9a8d-c36278dccc91.png)
