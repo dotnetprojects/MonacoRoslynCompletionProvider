@@ -48,18 +48,17 @@ namespace MonacoRoslynCompletionProvider
             var host = MefHostServices.Create(lst);
             var workspace = new AdhocWorkspace(host);
 
-
             var references = DefaultMetadataReferences.ToList();
 
             if (assemblies != null && assemblies.Length > 0)
             {
                 for (int i = 0; i < assemblies.Length; i++)
                 {
-                    references.Add(MetadataReference.CreateFromFile(Assembly.Load(assemblies[i]).Location));
+                    references.Add(MetadataReference.CreateFromFile(assemblies[i]));
                 }
             }
 
-            var projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Create(), "MyProject2", "MyProject2", LanguageNames.CSharp)
+            var projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Create(), "TempProject", "TempProject", LanguageNames.CSharp)
                 .WithMetadataReferences(references);
             var project = workspace.AddProject(projectInfo);
 
