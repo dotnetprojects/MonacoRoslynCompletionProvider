@@ -12,6 +12,8 @@ namespace MonacoRoslynCompletionProvider.Api
 
         public virtual int OffsetTo { get; set; }
 
-        public virtual CodeCheckSeverity Severity { get; set; }  
+        public virtual CodeCheckSeverity Severity { get; set; }
+
+        public virtual int SeverityNumeric { get; set; }
     }
 }
