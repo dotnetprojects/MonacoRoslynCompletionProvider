@@ -16,5 +16,4 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.2.0" />
   </ItemGroup>
-  
 </Project>
