@@ -1,10 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace MonacoRoslynCompletionProvider.Api
+﻿namespace MonacoRoslynCompletionProvider.Api
 {
     public class CodeCheckResult : IResponse
     {
         public CodeCheckResult() { }
+
+        public virtual string Id { get; set; }
+
+        public virtual string Keyword { get; set; }
 
         public virtual string Message { get; set; }
 

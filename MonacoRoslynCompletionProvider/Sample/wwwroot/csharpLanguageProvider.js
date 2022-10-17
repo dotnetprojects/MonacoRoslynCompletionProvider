@@ -39,15 +39,19 @@
 
             let resultQ = await axios.post("/completion/hover", JSON.stringify(request))
 
-            posStart = model.getPositionAt(resultQ.data.OffsetFrom);
-            posEnd = model.getPositionAt(resultQ.data.OffsetTo);
+            if (resultQ.data) {
+                posStart = model.getPositionAt(resultQ.data.OffsetFrom);
+                posEnd = model.getPositionAt(resultQ.data.OffsetTo);
 
-            return {
-                range: new monaco.Range(posStart.lineNumber, posStart.column, posEnd.lineNumber, posEnd.column),
-                contents: [
-                    { value: resultQ.data.Information }
-                ]
-            };
+                return {
+                    range: new monaco.Range(posStart.lineNumber, posStart.column, posEnd.lineNumber, posEnd.column),
+                    contents: [
+                        { value: resultQ.data.Information }
+                    ]
+                };
+            }
+
+            return null;
         }
     });
 
@@ -66,14 +70,14 @@
             for (let elem of resultQ.data) {
                 posStart = model.getPositionAt(elem.OffsetFrom);
                 posEnd = model.getPositionAt(elem.OffsetTo);
-
                 markers.push({
                     severity: elem.Severity,
                     startLineNumber: posStart.lineNumber,
                     startColumn: posStart.column,
                     endLineNumber: posEnd.lineNumber,
                     endColumn: posEnd.column,
-                    message: elem.Message
+                    message: elem.Message,
+                    code: elem.Id
                 });
             }
 
@@ -87,6 +91,37 @@
             handle = setTimeout(() => validate(), 500);
         });
         validate();
+    });
+
+    monaco.languages.registerCodeActionProvider("csharp", {
+        provideCodeActions: async (model, range, context, token) => {
+            const actions = context.markers.map(error => {
+                console.log(context, error);
+                return {
+                    title: `Example quick fix`,
+                    diagnostics: [error],
+                    kind: "quickfix",
+                    edit: {
+                        edits: [
+                            {
+                                resource: model.uri,
+                                edits: [
+                                    {
+                                        range: error,
+                                        text: "This text replaces the text with the error"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    isPreferred: true
+                };
+            });
+            return {
+                actions: actions,
+                dispose: () => { }
+            }
+        }
     });
 
 }
