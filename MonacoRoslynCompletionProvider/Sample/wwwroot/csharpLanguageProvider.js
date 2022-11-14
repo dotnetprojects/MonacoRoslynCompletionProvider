@@ -17,10 +17,12 @@
 
             for (let elem of resultQ.data) {
                 suggestions.push({
-                    label: elem.Suggestion,
+                    label: {
+                        label: elem.Suggestion,
+                        description: elem.Description
+                    },
                     kind: monaco.languages.CompletionItemKind.Function,
-                    insertText: elem.Suggestion,
-                    documentation: elem.Description
+                    insertText: elem.Suggestion
                 });
             }
 
