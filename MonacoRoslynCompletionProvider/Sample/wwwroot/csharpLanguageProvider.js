@@ -3,7 +3,7 @@
     var assemblies = null;
 
     monaco.languages.registerCompletionItemProvider('csharp', {
-        triggerCharacters: [".", "("],
+        triggerCharacters: ["."],
         provideCompletionItems: async (model, position) => {
             let suggestions = [];
 
@@ -29,6 +29,38 @@
             return { suggestions: suggestions };
         }
     });
+
+    //@ts-ignore
+    monaco.languages.registerSignatureHelpProvider('csharp', {
+        signatureHelpTriggerCharacters: ["("],
+        signatureHelpRetriggerCharacters: [","],
+        //@ts-ignore
+        provideSignatureHelp: async (model, position, token, context) => {
+            //@ts-ignore
+            let signatureHelp= {
+                signatures: [
+                    {
+                        label: 'test',
+                        documentation: "ooooo",
+                        parameters: [{ label: 'par1', documentation: 'ppp' }]
+                    }
+                ],
+                activeParameter: 0,
+                activeSignature: 0
+            };
+
+            let request = {
+                Code: model.getValue(),
+                Position: model.getOffsetAt(position),
+                Assemblies: assemblies
+            }
+
+            let resultQ = await axios.post("/completion/signature", JSON.stringify(request))
+
+            return { value: signatureHelp };
+        }
+    });
+
 
     monaco.languages.registerHoverProvider('csharp', {
         provideHover: async function (model, position) {

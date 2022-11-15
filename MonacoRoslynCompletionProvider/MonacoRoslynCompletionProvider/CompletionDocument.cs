@@ -44,5 +44,11 @@ namespace MonacoRoslynCompletionProvider
             var codeCheckProvider = new CodeCheckProvider();
             return await codeCheckProvider.Provide(emitResult, document, cancellationToken);
         }
+
+        public Task<SignatureHelpResult> GetSignatureHelp(int position, CancellationToken cancellationToken)
+        {
+            var signatureHelpProvider = new SignatureHelpProvider();
+            return signatureHelpProvider.Provide(document, position);
+        }
     }
 }
