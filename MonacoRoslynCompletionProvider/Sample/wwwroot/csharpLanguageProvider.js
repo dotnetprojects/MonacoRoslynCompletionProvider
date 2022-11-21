@@ -30,24 +30,12 @@
         }
     });
 
-    //@ts-ignore
     monaco.languages.registerSignatureHelpProvider('csharp', {
         signatureHelpTriggerCharacters: ["("],
         signatureHelpRetriggerCharacters: [","],
-        //@ts-ignore
+        
+
         provideSignatureHelp: async (model, position, token, context) => {
-            //@ts-ignore
-            let signatureHelp= {
-                signatures: [
-                    {
-                        label: 'test',
-                        documentation: "ooooo",
-                        parameters: [{ label: 'par1', documentation: 'ppp' }]
-                    }
-                ],
-                activeParameter: 0,
-                activeSignature: 0
-            };
 
             let request = {
                 Code: model.getValue(),
@@ -57,7 +45,39 @@
 
             let resultQ = await axios.post("/completion/signature", JSON.stringify(request))
 
-            return { value: signatureHelp };
+            let signatureHelp = {
+                signatures: [],
+                activeParameter: 0,
+                activeSignature: 0
+            };
+
+            for (let signature of resultQ.data.Signatures) {
+                let params = [];
+                for (let param of signature.Parameters) {
+                    params.push({
+                        label: param.Label,
+                        documentation: param.Documentation
+                    });
+                }
+                let name = "("
+                for (let i = 0; i < params.length; i++) {
+                    if (i > 0)
+                        name += ", " + params[i].label;
+                    else
+                        name += params[i].label;
+                }
+                name += ")";
+
+                signatureHelp.signatures.push({
+                    label: signature.Label + name,
+                    //documentation: signature.Documentation,
+                    parameters: params
+                })
+            }
+            return {
+                value: signatureHelp,
+                dispose: () => { }
+            };
         }
     });
 

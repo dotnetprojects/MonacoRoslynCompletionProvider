@@ -40,7 +40,35 @@ namespace MonacoRoslynCompletionProvider
                 }
             }
 
-            return null;
+            var signatures = new List<Signatures>();
+            foreach (var signatureWrap in allMethodRefs)
+            {
+                foreach (var signature in signatureWrap)
+                {
+                    var parameters = new List<Parameter>();
+                    if(signature.Definition is IMethodSymbol symbol)
+                    {
+                        foreach(var par in symbol.Parameters)
+                        {
+                            parameters.Add(new Parameter()
+                            {
+                                Label = par.Type + " " + par.Name,
+                                Documentation = par.GetDocumentationCommentXml()
+                            });
+                        }
+                    }
+                    signatures.Add(new Signatures()
+                    {
+                        Label = signature.Definition.Name,
+                        Documentation = "",
+                        Parameters = parameters.ToArray()
+                    });
+                }
+            }
+            return new SignatureHelpResult()
+            {
+                Signatures = signatures.ToArray()
+            };
         }
     }
 }
