@@ -3,7 +3,7 @@
     var assemblies = null;
 
     monaco.languages.registerCompletionItemProvider('csharp', {
-        triggerCharacters: ["."],
+        triggerCharacters: [".", " "],
         provideCompletionItems: async (model, position) => {
             let suggestions = [];
 
