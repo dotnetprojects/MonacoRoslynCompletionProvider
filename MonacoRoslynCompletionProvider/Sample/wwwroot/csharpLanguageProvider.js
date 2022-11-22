@@ -44,7 +44,6 @@ function registerCsharpProvider() {
     monaco.languages.registerSignatureHelpProvider('csharp', {
         signatureHelpTriggerCharacters: ["("],
         signatureHelpRetriggerCharacters: [","],
-        
 
         provideSignatureHelp: async (model, position, token, context) => {
 
@@ -55,36 +54,30 @@ function registerCsharpProvider() {
             }
 
             let resultQ = await sendRequest("signature", request);
+            if (!resultQ.data) return;
 
-            let signatureHelp = {
-                signatures: [],
-                activeParameter: 0,
-                activeSignature: 0
-            };
-
+            let signatures = [];
             for (let signature of resultQ.data.Signatures) {
                 let params = [];
                 for (let param of signature.Parameters) {
                     params.push({
                         label: param.Label,
-                        documentation: param.Documentation
+                        documentation: param.Documentation ?? ""
                     });
                 }
-                let name = "("
-                for (let i = 0; i < params.length; i++) {
-                    if (i > 0)
-                        name += ", " + params[i].label;
-                    else
-                        name += params[i].label;
-                }
-                name += ")";
 
-                signatureHelp.signatures.push({
-                    label: signature.Label + name,
-                    //documentation: signature.Documentation,
-                    parameters: params
-                })
+                signatures.push({
+                    label: signature.Label,
+                    documentation: signature.Documentation ?? "",
+                    parameters: params,
+                });
             }
+
+            let signatureHelp = {};
+            signatureHelp.signatures = signatures;
+            signatureHelp.activeParameter = resultQ.data.ActiveParameter;
+            signatureHelp.activeSignature = resultQ.data.ActiveSignature;
+
             return {
                 value: signatureHelp,
                 dispose: () => { }

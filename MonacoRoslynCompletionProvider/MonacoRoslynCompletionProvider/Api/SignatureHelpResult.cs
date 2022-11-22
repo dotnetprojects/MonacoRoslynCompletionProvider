@@ -5,6 +5,8 @@
         public SignatureHelpResult() { }
 
         public virtual Signatures[] Signatures { get; set; }
+        public virtual int ActiveParameter { get; set; }
+        public virtual int ActiveSignature { get; set; }
     }
 
     public class Signatures
