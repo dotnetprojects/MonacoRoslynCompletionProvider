@@ -48,7 +48,7 @@ namespace MonacoRoslynCompletionProvider
         public Task<SignatureHelpResult> GetSignatureHelp(int position, CancellationToken cancellationToken)
         {
             var signatureHelpProvider = new SignatureHelpProvider();
-            return signatureHelpProvider.Provide(document, position);
+            return signatureHelpProvider.Provide(document, position, semanticModel);
         }
     }
 }

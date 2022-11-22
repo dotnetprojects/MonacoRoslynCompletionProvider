@@ -24,10 +24,24 @@ namespace MonacoRoslynCompletionProvider
                 return new HoverInfoResult() { Information = typeInfo.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
 
+            if (expressionNode is PropertyDeclarationSyntax prop)
+            {
+                var location = expressionNode.GetLocation();
+                return new HoverInfoResult() { Information = prop.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
+            }
+
             if (expressionNode is ParameterSyntax p)
             {
                 var location = expressionNode.GetLocation();
                 return new HoverInfoResult() { Information = p.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
+            }
+
+            if (expressionNode is IdentifierNameSyntax i)
+            {
+                var location = expressionNode.GetLocation();
+                typeInfo = semanticModel.GetTypeInfo(i);
+                if (typeInfo.Type != null)
+                    return new HoverInfoResult() { Information = typeInfo.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
 
             var symbolInfo = semanticModel.GetSymbolInfo(expressionNode);
