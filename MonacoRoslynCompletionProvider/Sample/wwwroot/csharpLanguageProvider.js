@@ -1,10 +1,10 @@
 ﻿async function sendRequest(type, request) {
     let endPoint;
     switch (type) {
-        case 'complete': endPoint = '/completion/complete';
-        case 'signature': endPoint = '/completion/signature';
-        case 'hover': endPoint = '/completion/hover';
-        case 'codeCheck': endPoint = '/completion/codeCheck';
+        case 'complete': endPoint = '/completion/complete'; break;
+        case 'signature': endPoint = '/completion/signature'; break;
+        case 'hover': endPoint = '/completion/hover'; break;
+        case 'codeCheck': endPoint = '/completion/codeCheck'; break;
     }
     return await axios.post(endPoint, JSON.stringify(request))
 }
