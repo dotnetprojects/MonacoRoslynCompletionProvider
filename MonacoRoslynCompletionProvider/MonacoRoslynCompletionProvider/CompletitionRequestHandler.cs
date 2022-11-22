@@ -26,5 +26,12 @@ namespace MonacoRoslynCompletionProvider
             var document = await workspace.CreateDocument(codeCheckRequest.Code);
             return await document.GetCodeCheckResults(CancellationToken.None);
         }
+
+        public async static Task<SignatureHelpResult> Handle(SignatureHelpRequest signatureHelpRequest)
+        {
+            var workspace = CompletionWorkspace.Create(signatureHelpRequest.Assemblies);
+            var document = await workspace.CreateDocument(signatureHelpRequest.Code);
+            return await document.GetSignatureHelp(signatureHelpRequest.Position, CancellationToken.None);
+        }
     }
 }

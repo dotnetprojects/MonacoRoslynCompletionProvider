@@ -18,6 +18,13 @@ app.MapPost("/completion/{0}", async (e) =>
             await JsonSerializer.SerializeAsync(e.Response.Body, tabCompletionResults);
             return;
         }
+        else if (e.Request.Path.Value?.EndsWith("signature") == true)
+        {
+            var signatureHelpRequest = JsonSerializer.Deserialize<SignatureHelpRequest>(text);
+            var signatureHelpResult = await CompletitionRequestHandler.Handle(signatureHelpRequest);
+            await JsonSerializer.SerializeAsync(e.Response.Body, signatureHelpResult);
+            return;
+        }
         else if (e.Request.Path.Value?.EndsWith("hover") == true)
         {
             var hoverInfoRequest = JsonSerializer.Deserialize<HoverInfoRequest>(text);

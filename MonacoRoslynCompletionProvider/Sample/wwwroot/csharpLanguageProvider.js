@@ -1,9 +1,20 @@
-﻿function registerCsharpProvider() {
+﻿async function sendRequest(type, request) {
+    let endPoint;
+    switch (type) {
+        case 'complete': endPoint = '/completion/complete'; break;
+        case 'signature': endPoint = '/completion/signature'; break;
+        case 'hover': endPoint = '/completion/hover'; break;
+        case 'codeCheck': endPoint = '/completion/codeCheck'; break;
+    }
+    return await axios.post(endPoint, JSON.stringify(request))
+}
+
+function registerCsharpProvider() {
 
     var assemblies = null;
 
     monaco.languages.registerCompletionItemProvider('csharp', {
-        triggerCharacters: [".", "("],
+        triggerCharacters: [".", " "],
         provideCompletionItems: async (model, position) => {
             let suggestions = [];
 
@@ -13,7 +24,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/complete", JSON.stringify(request))
+            let resultQ = await sendRequest("complete", request);
 
             for (let elem of resultQ.data) {
                 suggestions.push({
@@ -30,6 +41,51 @@
         }
     });
 
+    monaco.languages.registerSignatureHelpProvider('csharp', {
+        signatureHelpTriggerCharacters: ["("],
+        signatureHelpRetriggerCharacters: [","],
+
+        provideSignatureHelp: async (model, position, token, context) => {
+
+            let request = {
+                Code: model.getValue(),
+                Position: model.getOffsetAt(position),
+                Assemblies: assemblies
+            }
+
+            let resultQ = await sendRequest("signature", request);
+            if (!resultQ.data) return;
+
+            let signatures = [];
+            for (let signature of resultQ.data.Signatures) {
+                let params = [];
+                for (let param of signature.Parameters) {
+                    params.push({
+                        label: param.Label,
+                        documentation: param.Documentation ?? ""
+                    });
+                }
+
+                signatures.push({
+                    label: signature.Label,
+                    documentation: signature.Documentation ?? "",
+                    parameters: params,
+                });
+            }
+
+            let signatureHelp = {};
+            signatureHelp.signatures = signatures;
+            signatureHelp.activeParameter = resultQ.data.ActiveParameter;
+            signatureHelp.activeSignature = resultQ.data.ActiveSignature;
+
+            return {
+                value: signatureHelp,
+                dispose: () => { }
+            };
+        }
+    });
+
+
     monaco.languages.registerHoverProvider('csharp', {
         provideHover: async function (model, position) {
 
@@ -39,7 +95,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/hover", JSON.stringify(request))
+            let resultQ = await sendRequest("hover", request);
 
             if (resultQ.data) {
                 posStart = model.getPositionAt(resultQ.data.OffsetFrom);
@@ -65,7 +121,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/codeCheck", JSON.stringify(request))
+            let resultQ = await sendRequest("codeCheck", request)
 
             let markers = [];
 
@@ -95,7 +151,25 @@
         validate();
     });
 
-    monaco.languages.registerCodeActionProvider("csharp", {
+    /*monaco.languages.registerInlayHintsProvider('csharp', {
+        displayName: 'test',
+        provideInlayHints(model, range, token) {
+            return {
+                hints: [
+                    {
+                        label: "Test",
+                        tooltip: "Tooltip",
+                        position: { lineNumber: 3, column: 2},
+                        kind: 2
+                    }
+                ],
+                dispose: () => { }
+            };
+        }
+
+    });*/
+
+    /*monaco.languages.registerCodeActionProvider("csharp", {
         provideCodeActions: async (model, range, context, token) => {
             const actions = context.markers.map(error => {
                 console.log(context, error);
@@ -124,6 +198,6 @@
                 dispose: () => { }
             }
         }
-    });
+    });*/
 
 }

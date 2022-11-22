@@ -43,7 +43,11 @@ namespace MonacoRoslynCompletionProvider
                 if (symbolInfo.Symbol != null)
                 {
                     var location = expressionNode.GetLocation();
-                    return new HoverInfoResult() { Information = symbolInfo.Symbol.ToDisplayString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
+                    return new HoverInfoResult() {
+                        //Information = symbolInfo.Symbol.ToDisplayString(),
+                        Information = HoverInfoBuilder.Build(symbolInfo),
+                        OffsetFrom = location.SourceSpan.Start, 
+                        OffsetTo = location.SourceSpan.End };
                 }
                     return null;
                 return null;
