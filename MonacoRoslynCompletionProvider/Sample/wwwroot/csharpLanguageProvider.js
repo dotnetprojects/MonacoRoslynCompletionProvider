@@ -1,4 +1,15 @@
-﻿function registerCsharpProvider() {
+﻿async function sendRequest(type, request) {
+    let endPoint;
+    switch (type) {
+        case 'complete': endPoint = '/completion/complete';
+        case 'signature': endPoint = '/completion/signature';
+        case 'hover': endPoint = '/completion/hover';
+        case 'codeCheck': endPoint = '/completion/codeCheck';
+    }
+    return await axios.post(endPoint, JSON.stringify(request))
+}
+
+function registerCsharpProvider() {
 
     var assemblies = null;
 
@@ -13,7 +24,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/complete", JSON.stringify(request))
+            let resultQ = await sendRequest("complete", request);
 
             for (let elem of resultQ.data) {
                 suggestions.push({
@@ -43,7 +54,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/signature", JSON.stringify(request))
+            let resultQ = await sendRequest("signature", request);
 
             let signatureHelp = {
                 signatures: [],
@@ -91,7 +102,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/hover", JSON.stringify(request))
+            let resultQ = await sendRequest("hover", request);
 
             if (resultQ.data) {
                 posStart = model.getPositionAt(resultQ.data.OffsetFrom);
@@ -117,7 +128,7 @@
                 Assemblies: assemblies
             }
 
-            let resultQ = await axios.post("/completion/codeCheck", JSON.stringify(request))
+            let resultQ = await sendRequest("codeCheck", request)
 
             let markers = [];
 
@@ -165,7 +176,7 @@
 
     });*/
 
-    monaco.languages.registerCodeActionProvider("csharp", {
+    /*monaco.languages.registerCodeActionProvider("csharp", {
         provideCodeActions: async (model, range, context, token) => {
             const actions = context.markers.map(error => {
                 console.log(context, error);
@@ -194,6 +205,6 @@
                 dispose: () => { }
             }
         }
-    });
+    });*/
 
 }
