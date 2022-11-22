@@ -147,6 +147,24 @@
         validate();
     });
 
+    /*monaco.languages.registerInlayHintsProvider('csharp', {
+        displayName: 'test',
+        provideInlayHints(model, range, token) {
+            return {
+                hints: [
+                    {
+                        label: "Test",
+                        tooltip: "Tooltip",
+                        position: { lineNumber: 3, column: 2},
+                        kind: 2
+                    }
+                ],
+                dispose: () => { }
+            };
+        }
+
+    });*/
+
     monaco.languages.registerCodeActionProvider("csharp", {
         provideCodeActions: async (model, range, context, token) => {
             const actions = context.markers.map(error => {
