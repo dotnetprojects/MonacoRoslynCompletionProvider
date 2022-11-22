@@ -9,11 +9,16 @@ namespace MonacoRoslynCompletionProvider.Api
         {
             if (symbolInfo.Symbol is IMethodSymbol symbol)
             {
-                return new StringBuilder().Append("(method) ").Append(symbol.DeclaredAccessibility.ToString().ToLower()).Append(' ')
-                    .Append(symbol.ToDisplayString()).Append(" : ")
+                var sb = new StringBuilder().Append("(method) ").Append(symbol.DeclaredAccessibility.ToString().ToLower()).Append(' ');
+                if (symbol.IsStatic)
+                    sb.Append("static").Append(' ');
+                sb.Append(symbol.ToDisplayString()).Append(" : ")
                     .Append(symbol.ReturnType).ToString();
+                return sb.ToString();
             }
-            return symbolInfo.Symbol.ToDisplayString();
+            if (symbolInfo.Symbol is ILocalSymbol localsymbol)
+                return new StringBuilder().Append(localsymbol.Name).Append(" : ").Append(localsymbol.Type).ToString();
+            return string.Empty;
         }
     }
 }
