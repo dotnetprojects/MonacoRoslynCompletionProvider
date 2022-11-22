@@ -12,13 +12,9 @@ namespace MonacoRoslynCompletionProvider
     {
         public async Task<HoverInfoResult> Provide(Document document, int position, SemanticModel semanticModel)
         {
-            //SemanticModel semanticModel = await document.GetSemanticModelAsync();
-            //if (semanticModel == null)
-            //    return null;
-
             TypeInfo typeInfo;
             var syntaxRoot = await document.GetSyntaxRootAsync();
-            
+
             var expressionNode = syntaxRoot.FindToken(position).Parent;
             if (expressionNode is VariableDeclaratorSyntax)
             {
@@ -27,32 +23,24 @@ namespace MonacoRoslynCompletionProvider
                 var location = expressionNode.GetLocation();
                 return new HoverInfoResult() { Information = typeInfo.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
-            else if (expressionNode is ParameterSyntax p)
+
+            if (expressionNode is ParameterSyntax p)
             {
                 var location = expressionNode.GetLocation();
                 return new HoverInfoResult() { Information = p.Type.ToString(), OffsetFrom = location.SourceSpan.Start, OffsetTo = location.SourceSpan.End };
             }
-            //else if (expressionNode is ClassDeclarationSyntax)
-            //{
-            //    throw new NotImplementedException();
-            //}
-            else
+
+            var symbolInfo = semanticModel.GetSymbolInfo(expressionNode);
+            if (symbolInfo.Symbol != null)
             {
-
-                var symbolInfo = semanticModel.GetSymbolInfo(expressionNode);
-                if (symbolInfo.Symbol != null)
+                var location = expressionNode.GetLocation();
+                return new HoverInfoResult()
                 {
-                    var location = expressionNode.GetLocation();
-                    return new HoverInfoResult() {
-                        //Information = symbolInfo.Symbol.ToDisplayString(),
-                        Information = HoverInfoBuilder.Build(symbolInfo),
-                        OffsetFrom = location.SourceSpan.Start, 
-                        OffsetTo = location.SourceSpan.End };
-                }
-                    return null;
-                return null;
+                    Information = HoverInfoBuilder.Build(symbolInfo),
+                    OffsetFrom = location.SourceSpan.Start,
+                    OffsetTo = location.SourceSpan.End
+                };
             }
-
             return null;
         }
     }
