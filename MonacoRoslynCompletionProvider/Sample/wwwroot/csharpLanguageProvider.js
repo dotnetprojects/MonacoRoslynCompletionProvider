@@ -11,7 +11,7 @@
 
 function registerCsharpProvider() {
 
-    var assemblies = null;
+    var assemblies = ['.\\bin\\Debug\\net6.0\\System.Text.Json.dll'];
 
     monaco.languages.registerCompletionItemProvider('csharp', {
         triggerCharacters: [".", " "],

@@ -24,7 +24,6 @@ namespace MonacoRoslynCompletionProvider
                 activeParameter += 1;
             }
 
-
             var signaturesSet = new HashSet<Signatures>();
             var bestScore = int.MinValue;
             Signatures bestScoredItem = null;
