@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -78,11 +79,13 @@ namespace MonacoRoslynCompletionProvider
                     references: _metadataReferences
                 );
 
-            var result = compilation.Emit("temp");
-            var semanticModel = compilation.GetSemanticModel(st, true);
-
-            
-            return new CompletionDocument(document, semanticModel, result); 
+            using(var temp = new MemoryStream())
+            {
+                var result = compilation.Emit(temp);
+                var semanticModel = compilation.GetSemanticModel(st, true);
+                
+                return new CompletionDocument(document, semanticModel, result); 
+            }            
         }
     }
 }
