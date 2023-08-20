@@ -67,7 +67,7 @@ namespace MonacoRoslynCompletionProvider
             return new CompletionWorkspace() { _workspace = workspace, _project = project, _metadataReferences = references };
         }
 
-        public async Task<CompletionDocument> CreateDocument(string code)
+        public async Task<CompletionDocument> CreateDocument(string code, OutputKind outputKind = OutputKind.DynamicallyLinkedLibrary)
         {
             var document = _workspace.AddDocument(_project.Id, "MyFile2.cs", SourceText.From(code));
             var st = await document.GetSyntaxTreeAsync();
@@ -75,7 +75,7 @@ namespace MonacoRoslynCompletionProvider
             CSharpCompilation
                 .Create("Temp",
                     new[] { st },
-                    options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary),
+                    options: new CSharpCompilationOptions(outputKind),
                     references: _metadataReferences
                 );
 
