@@ -1,7 +1,10 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MonacoRoslynCompletionProvider;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using MonacoRoslynCompletionProvider.Api;
 
 namespace Tests
 {
@@ -33,6 +36,20 @@ namespace ConsoleApp1
             var document = await ws.CreateDocument(code);
             var info = await document.GetHoverInformation(258, CancellationToken.None);
             var info2 = await document.GetHoverInformation(267, CancellationToken.None);
+        }
+
+        [TestMethod]
+        public async Task DocumentShouldNotContainErrorsWhenUsingTopLevelStatements()
+        {
+            const string code = @"using System;
+Console.WriteLine(""Hello, world!"");
+";
+
+            var ws = CompletionWorkspace.Create();
+            var document = await ws.CreateDocument(code, OutputKind.ConsoleApplication);
+            var codeCheckResults = await document.GetCodeCheckResults(CancellationToken.None);
+
+            Assert.IsTrue(codeCheckResults.All(r => r.Severity != CodeCheckSeverity.Error));
         }
     }
 }
